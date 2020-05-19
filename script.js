@@ -1,5 +1,5 @@
 const cartProducts = document.querySelector('.cartProducts');
-const bodyVar = document.querySelector('body');
+const bodyProducts = document.querySelector('.buy-now');
 const totalSumSpan = document.querySelector('.totalSumSpan');
 const totalSumTaxSpan = document.querySelector('.totalSumTax');
 let localJsonStorage;
@@ -21,35 +21,40 @@ const populateStore = function(localJsonStorage){
 	}
 }
 
-const CreateAndFillTile = function(obj, targetLocation = bodyVar){
-	let newTile = document.createElement('div');
+const CreateAndFillTile = function(obj, targetLocation = bodyProducts){
+	let fillerTile = document.createElement('div');
+	let productTile = document.createElement('div'); //So they can later be displaeyd under the product tile.
 	let newNameHolder = document.createElement('div');
 	let newPriceHolder = document.createElement('div');
 	
-	newTile.style.backgroundImage = `url(${obj.image.small})`;
+	productTile.style.backgroundImage = `url(${obj.image.small})`;
 
-	newPriceHolder.textContent = `Price: ${obj.price} BGN`;
+	newPriceHolder.textContent = `Price: ${obj.price} lv.`;
 	newNameHolder.textContent = obj.name;
 
-	newTile.classList.add('product');
+	productTile.classList.add('product');
 	newNameHolder.classList.add('product-title');
 	newPriceHolder.classList.add('product-title');
+	newPriceHolder.classList.add('displayUnder');
+	fillerTile.classList.add('fillParent');
 
-	newTile.appendChild(newNameHolder);
-	newTile.appendChild(newPriceHolder);
-	targetLocation.appendChild(newTile);
+	productTile.appendChild(fillerTile);
+	productTile.appendChild(newNameHolder);
+	productTile.appendChild(newPriceHolder);
+	
+	targetLocation.appendChild(productTile);
 
-	newTile.objPointer = JSON.parse(JSON.stringify(obj));
-	newTile.dataset.afterContent = '0';
-	if(targetLocation !== bodyVar){
-		newTile.classList.add('inCart'); //Allows increment/decrement, depending on where you're clicking on it.
-		cartObjStorage.push(newTile);
+	productTile.objPointer = JSON.parse(JSON.stringify(obj));
+	productTile.dataset.afterContent = '0';
+	if(targetLocation !== bodyProducts){
+		productTile.classList.add('inCart'); //Allows increment/decrement, depending on where you're clicking on it.
+		cartObjStorage.push(productTile);
 
 	}else{
-			newTile.classList.add('inStore');
-			storeObjStorage.push(newTile);	//When loading initial tiles, it adds the divs to an array.
+			productTile.classList.add('inStore');
+			storeObjStorage.push(productTile);	//When loading initial tiles, it adds the divs to an array.
 	}
-	newTile.addEventListener('click', ShoppingCartInteractionHandler); //To change to event delegation.
+	productTile.addEventListener('click', ShoppingCartInteractionHandler); //To change to event delegation.
 }
 
 const ShoppingCartInteractionHandler = function(){
